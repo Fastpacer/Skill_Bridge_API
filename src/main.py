@@ -1,8 +1,10 @@
 from fastapi import FastAPI
 from src.db import Base, engine
 
+# VERY IMPORTANT — force model import
+from src.models.models import User, Session, Attendance
+
 from src.api import auth, sessions, attendance, batches, monitoring
-from src.models import models
 
 app = FastAPI()
 
@@ -12,7 +14,7 @@ def on_startup():
     print("🚀 APP STARTING...")
     try:
         Base.metadata.create_all(bind=engine)
-        print("✅ DB INIT SUCCESS")
+        print("✅ TABLES CREATED")
     except Exception as e:
         print("❌ DB INIT FAILED:", e)
 
