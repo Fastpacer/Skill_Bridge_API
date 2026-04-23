@@ -6,7 +6,16 @@ from src.models import models
 
 app = FastAPI()
 
-Base.metadata.create_all(bind=engine)
+
+@app.on_event("startup")
+def on_startup():
+    print("🚀 APP STARTING...")
+    try:
+        Base.metadata.create_all(bind=engine)
+        print("✅ DB INIT SUCCESS")
+    except Exception as e:
+        print("❌ DB INIT FAILED:", e)
+
 
 app.include_router(auth.router)
 app.include_router(sessions.router)
