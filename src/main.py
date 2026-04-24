@@ -1,8 +1,8 @@
 from fastapi import FastAPI
 from src.db import Base, engine
 
-# VERY IMPORTANT — force model import
-from src.models.models import User, Session, Attendance
+# 🔥 IMPORTANT: import ALL models so SQLAlchemy registers them
+from src.models.models import User, Session, Attendance, Batch, BatchInvite
 
 from src.api import auth, sessions, attendance, batches, monitoring
 
@@ -13,8 +13,12 @@ app = FastAPI()
 def on_startup():
     print("🚀 APP STARTING...")
     try:
+        # Debug: confirm tables detected
+        print("TABLES DETECTED:", Base.metadata.tables.keys())
+
         Base.metadata.create_all(bind=engine)
-        print("✅ TABLES CREATED")
+
+        print("✅ TABLES CREATED SUCCESSFULLY")
     except Exception as e:
         print("❌ DB INIT FAILED:", e)
 
