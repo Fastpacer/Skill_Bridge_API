@@ -12,17 +12,18 @@ app = FastAPI()
 @app.on_event("startup")
 def on_startup():
     print("🚀 APP STARTING...")
-    try:
-        # Debug: confirm tables detected
-        print("TABLES DETECTED:", Base.metadata.tables.keys())
 
-        Base.metadata.create_all(bind=engine)
+    # Debug: confirm models are loaded
+    print("TABLES DETECTED:", list(Base.metadata.tables.keys()))
 
-        print("✅ TABLES CREATED SUCCESSFULLY")
-    except Exception as e:
-        print("❌ DB INIT FAILED:", e)
+    # ❗ DO NOT wrap this in try/except
+    # Let it crash loudly if something is wrong
+    Base.metadata.create_all(bind=engine)
+
+    print("✅ TABLES CREATED SUCCESSFULLY")
 
 
+# Include routers
 app.include_router(auth.router)
 app.include_router(sessions.router)
 app.include_router(attendance.router)
